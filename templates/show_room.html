@@ -1,0 +1,57 @@
+<!--ожидается шаблон-->
+{% extends "layout.html" %}
+
+<!--начало содержимого. метка для вставки в шаблон-->
+{% block content %}
+
+<!--заголовок страницы - название комнаты-->
+<h1> {{ room.name }} </h1>
+
+<!--первый блок текста - содержание комнаты-->
+<pre>
+{{ room.description }}
+</pre>
+
+<!--если это комната концовки-->
+{% if room.name in ['death', "The End"] %}
+    <!--выводить ссылку на начальную страницу-->
+    <p><a href="/">Play Again?</a></p>
+
+<!--иначе-->
+{% else %}
+    <!--создаётся блок подсказок-->
+    <div id="hint" style="display:none;">
+        <!--каждая подсказка для конкретной
+        комнаты выводится отдельным абзацем-->
+        {% for i in help(room.name) %}
+            <p>{{ i }}</p>
+        {% endfor %}
+    <!--конец блока подсказок-->
+    </div>
+
+    <!--создание кнопки "Спрятать подсказки"-->
+    <button id="hint_hide"
+    onclick="document.getElementById('hint').style.display='none';
+    document.getElementById('hint_hide').style.display='none';
+    document.getElementById('hint_show').style.display='block';"
+    style="display:none;">Спрятать подсказки</button>
+    <!--создание кнопки "Показать подсказки"-->
+    <button id="hint_show"
+    onclick="document.getElementById('hint').style.display='block';
+    document.getElementById('hint_hide').style.display='block';
+    document.getElementById('hint_show').style.display='none';"
+    style="display:block;">Показать подсказки</button>
+
+    <!--блок формы для вводы выбора-->
+    <div class="ans_form">
+      <form action="/game" method="POST">
+      <input type="text" name="action" placeholder="Введите действие...">
+      <button type="submit"></button>
+      </form>
+    <!--конец блока формы для ответов-->
+    </div>
+
+<!--конец ветвления-->
+{% endif %}
+<!--конец содержимого. метка для шаблона-->
+{% endblock %}

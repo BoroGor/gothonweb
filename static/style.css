@@ -1,0 +1,53 @@
+/*цвет фона всей страницы*/
+* {background: #dee8ec}
+/*цвет текста заголовка первого уровня*/
+H1 {color: #6f2205 }
+/**/
+body div {padding: 30px 0}
+
+body pre{
+  color: #a36c22;
+  font-weight: bold;
+}
+
+body #hint_hide {
+  background: #93b0d0;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  height: 42px;
+}
+
+body #hint_show {
+  background: #93b0d0;
+  border: 2px solid #000000;
+  border-radius: 5px;
+  height: 42px;
+}
+
+body .ans_form input, .ans_form button {
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+body .ans_form input {
+  width: 200px;
+  height: 42px;
+  background: #eacc97;
+}
+
+body .ans_form button {
+  height: 42px;
+  width: 42px;
+  position: absolute;
+  cursor: pointer;
+  background: #6f2205;
+}
+
+body .ans_form button:before {
+  content: "\f105";
+  font-family: FontAwesome;
+  color: #F9F0DA;
+  font-size: 20px;
+  font-weight: bold;
+}
