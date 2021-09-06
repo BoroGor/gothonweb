@@ -33,22 +33,29 @@ def test_map():
 
 def test_gothon_game_map():
     start_room = load_room(START)
+    # проверка смертельных путей
     assert_equal(start_room.go('shoot'), cor_shoot_death)
     assert_equal(start_room.go('dodge'), cor_dodge_death)
+    # проверка возврата при вводе несуществующих вариантов
     assert_equal(start_room.go('hgh123'), None)
 
+    # переход в оружейную
     laser_room = start_room.go('tell a joke')
+    # проверка того, что перешли в верную комнату
     assert_equal(laser_room, laser_weapon_armory)
-    #assert_equal(laser_room.go('*'), armory_death)
-    assert_equal(laser_room.go('lpthw'), None)
 
+    # переход на мост
     bridge_room = laser_room.go('0132')
+    # проверка того, что перешли в верную комнату
     assert_equal(bridge_room, the_bridge)
+    # проверка смертельных путей
     assert_equal(bridge_room.go('throw the bomb'), bridge_death)
-    assert_equal(bridge_room.go('ghgh'), None)
 
+    # переход к спастельным капсулам
     pod_room = bridge_room.go('slowly place the bomb')
+    # проверка того, что перешли в верную комнату
     assert_equal(pod_room, escape_pod)
-    #assert_equal(pod_room.go('*'), the_end_loser)
+    # проверка выигрыша
     assert_equal(pod_room.go('2'), the_end_winner)
-    assert_equal(pod_room.go(12), None)
+    # проверка проигрыша
+    assert_equal(pod_room.go('1'), the_end_loser)

@@ -134,7 +134,7 @@ your time. One shot - one kill.
 
 laser_weapon_armory.add_paths({
     '0132': the_bridge,
-    '*': armory_death
+    #'*': armory_death
 })
 
 
