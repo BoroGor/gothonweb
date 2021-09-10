@@ -45,4 +45,21 @@ def test_game():
 
 # проверка отправки формы и переходов на соответствующие страницы
 def test_form():
-    pass
+    # проверка отправки пустой формы
+    data = {'action':''}
+    response = client.post('/game', follow_redirects = False, data=data)
+    eq_(response.status_code, 302)
+    # переход на новую страницу и проверка ожидания
+    response = client.post('/game', follow_redirects = True, data=data)
+    eq_(response.status_code, 200)
+    # перехода на новую страницу быть не должно
+    eq_(name_head(response), 'Central Corridor')
+
+    # проверка проигрыша в центральном коридоре
+    data = {'action': 'shoot'}
+    response = client.post('/game', follow_redirects = True, data=data)
+    eq_(response.status_code, 200)
+    # перехода на новую страницу быть не должно
+    eq_(name_head(response), 'death')
+
+    # переход в оружейную и проверка смерти после трёх

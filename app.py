@@ -10,33 +10,33 @@ app.debug = True
 
 
 # для начальной страницы
-@app.route('/')
+@app.route("/")
 # создаём обрабатывающую функцию
 def index():
     # создаём сессию с начальными данными - начальной комнатой
     # создаём пару КЛЮЧ - ЗНАЧЕНИЕ
-    session['room_name'] = planisphere.START # "central_corridor"
+    session["room_name"] = planisphere.START  # "central_corridor"
     # для оружейной
-    session['try'] = 0
+    session["try"] = 0
     # перенаправляем на указанный адрес
-    #print ('Cookies! \n', request.cookies)
+    # print ('Cookies! \n', request.cookies)
     return redirect(url_for("game"))
 
 
 # для страницы /game, задаём используемые методы
-@app.route("/game", methods=['GET', 'POST'])
+@app.route("/game", methods=["GET", "POST"])
 # создаём обрабатывающую функцию
 def game():
     # переменной присваиваем значение по ключу из сессии
-    room_name = session.get('room_name')
+    room_name = session.get("room_name")
     # если запрос на получение данных
     if request.method == "GET":
         # если есть имя комнаты, т.е. имя != None
         if room_name:
-        # если было 3 неудачные попытки ввести код, то смерть в оружейной
-            if room_name == 'laser_weapon_armory' and session['try'] >= 3:
+            # если было 3 неудачные попытки ввести код, то смерть в оружейной
+            if room_name == "laser_weapon_armory" and session["try"] >= 3:
                 # имя будущей комнаты - смерть в оруженой
-                session['room_name'] = 'armory_death'
+                session["room_name"] = "armory_death"
                 # перенаправляем для загрузки комнаты
                 return redirect(url_for("game"))
             else:
@@ -51,12 +51,12 @@ def game():
     # если запрос на отправку данных
     elif request.method == "POST":
         # если запрос из оружейной
-        if room_name == 'laser_weapon_armory':
+        if room_name == "laser_weapon_armory":
             # увеличиваем счётчик попыток ввести код
-            session['try'] = session.get('try') + 1
+            session["try"] = session.get("try") + 1
         # присваиваем переменной данные, введённые в поле формы с
         # именем "action"; = None, если ключ не существует
-        action = request.form.get('action')
+        action = request.form.get("action")
         # если имя комнаты и данные существуют
         if room_name and action:
             # за переменной закрепляем объект класса Room, найденный по имени
@@ -68,12 +68,12 @@ def game():
             if not next_room:
                 # изменяем данные сессии и закрепляем за "room_name"
                 # имя переменной для объекта класса Room
-                session['room_name'] = planisphere.name_room(room)
+                session["room_name"] = planisphere.name_room(room)
             # если следующая комната существует
             else:
                 # изменяем данные сессии и закрепляем за "room_name"
                 # имя переменной для объекта класса Room
-                session['room_name'] = planisphere.name_room(next_room)
+                session["room_name"] = planisphere.name_room(next_room)
         # в любом случае при отправке данных перенаправляем на страницу /game
         return redirect(url_for("game"))
     # если метод запроса не "get" и форма не отправлялась
@@ -83,7 +83,7 @@ def game():
 
 
 # YOU SHOULD CHANGE THIS IF YOU PUT ON THE INTERNET
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000)
+    app.run(host="localhost", port=5000)
