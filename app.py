@@ -1,6 +1,7 @@
 from flask import Flask, session, redirect, url_for, request, render_template
 from gothonweb import planisphere
 from gothonweb.helpblock import help
+#import sqlite3 as sql3
 
 
 # создаём объект класса Flask и присваиваем имя приложению - не переменной!

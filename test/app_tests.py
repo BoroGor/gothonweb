@@ -1,5 +1,6 @@
 from nose.tools import *
 from app import app
+from flask import session
 
 
 # настройка конфигурации приложения для тестирования, чтобы ошибки
@@ -44,7 +45,7 @@ def test_game():
     eq_(name_head(response), 'Central Corridor')
 
 # проверка отправки формы и переходов на соответствующие страницы
-def test_form():
+def test_action_form():
     # проверка отправки пустой формы
     data = {'action':''}
     response = client.post('/game', follow_redirects = False, data=data)
@@ -63,3 +64,15 @@ def test_form():
     eq_(name_head(response), 'death')
 
     # переход в оружейную и проверка смерти после трёх
+    with app.test_request_context('/game'):
+        # было сделано до запроса 2 попытки
+        session['try']=2
+        # комната - оружейная
+        session['romm_name']="laser_weapon_armory"
+        # данные, приводящие к проигрышу
+        data = {'action': '0000'}
+        response = client.post('/game', follow_redirects = True, data = data)
+        # проверка существования страницы
+        eq_(response.status_code, 200)
+        # проверка перехода на нужную страницу
+        eq_(name_head(response), 'death')
