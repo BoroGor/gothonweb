@@ -10,14 +10,7 @@ body pre{
   font-weight: bold;
 }
 
-body #hint_hide {
-  background: #93b0d0;
-  border: 2px solid #000000;
-  border-radius: 5px;
-  height: 42px;
-}
-
-body #hint_show {
+body #hint_hide, #hint_show {
   background: #93b0d0;
   border: 2px solid #000000;
   border-radius: 5px;

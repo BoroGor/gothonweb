@@ -1,14 +1,52 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<style media="screen">
+  #user_input, #pas_input {
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    width: 200px;
+    height: 42px;
+    background: #eacc97;
+  }
+  .login_form button {
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    height: 42px;
+    width: 42px;
+    position: absolute;
+    cursor: pointer;
+    background: #6f2205;
+  }
+  .login_form button:before {
+    content: "\f007";
+    font-family: FontAwesome;
+    color: #F9F0DA;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  #to_game {
+    background: #93b0d0;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    height: 42px;
+  }
+</style>
 <h1>Create Your Unique Nickname</h1>
 
-<p>
-<form action="/login" method="post">
-    <input type="text" name="username"><input type="submit">
-</form>
-</p>
-<p><a href="/">Play The Game</a></p>
+<div class="login_form">
+    <form action="/login" method="post">
+    <input type="text" name="username" autocomplete="off" required="required"
+    placeholder="Nickname" id='user_input'>
+    <p>
+    <input type="password" name="pswrd" autocomplete="off" required="required"
+    placeholder="Password" id='pas_input'>
+    </p>
+    <button type="submit"></button>
+    </form>
+</div>
+<p><a href="/game" id="to_game">Play Game Without LogIn</a></p>
 
 {% endblock %}

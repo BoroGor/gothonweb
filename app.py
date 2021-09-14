@@ -20,8 +20,14 @@ def index():
     # для оружейной
     session["try"] = 0
     # перенаправляем на указанный адрес
-    # print ('Cookies! \n', request.cookies)
-    return redirect(url_for("game"))
+    return redirect(url_for("login"))
+
+
+# для страницы регистрации
+@app.route("/login", methods=["GET", "POST"])
+# создаём обрабатывающую функцию
+def login():
+    return render_template("login.html")
 
 
 # для страницы /game, задаём используемые методы
