@@ -1,7 +1,7 @@
 from nose.tools import *
 from app import app
 from flask import session
-import sqlite3 as sql3
+import sqlite3
 
 
 # настройка конфигурации приложения для тестирования, чтобы ошибки
