@@ -79,7 +79,7 @@ def test_action_form():
         eq_(name_head(response), 'death')
 
 # проверка регистрации/входа, [/login]
-def test_login():
+#def test_login():
     # переход со стартовой страницы на страницу выхода
 
     # проверка регистрации нового пользователя
