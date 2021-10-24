@@ -35,7 +35,7 @@ def test_index():
     print(response.headers)
     eq_(response.status_code, 200)
     # проверяем то, что перешли на нужную страницу
-    eq_(name_head(response), 'Central Corridor')
+    eq_(name_head(response), 'Create Your Unique Nickname')
 
 # проверка страницы [/game]
 def test_game():

@@ -15,8 +15,6 @@ def test_connect_db():
     # функция возвращает объект класса "connect", адрес
     # берётся из конфигурации
     conn = fn.connect_db(app.config['DATABASE'])
-    # проверим, создался ли файл
-    eq_(Path(DATABASE_abs).exists(), True)
     # опишем функцию определения статуса соединения с БД
     def status(connection):
         # пробуем создать объект "курсора"
@@ -40,8 +38,25 @@ def test_connect_db():
 def test_create_db():
     # вызываем функцию, которая создаёт тестовую таблицу в тестовой БД
     fn.create_db(app.config['DATABASE'])
-    # создаём блок вводных данных (имя, пароль, попытки, дата регистр)
-    data =('First_User', 'firstpswrd', 0, '12-10-2021')
+    # проверим, создался ли файл
+    eq_(Path(DATABASE_abs).exists(), True)
+    # проверим содержимое файла
+    # создадим объект курсора, для вызова SQL-запросов
+    cur = fn.connect_db(app.config['DATABASE']).cursor()
+    # вернём тип объекта запроса, преобразуем в строку
+    a = str(type(cur.execute('select * from test_users')))
+    # если нет ошибки, то тип объекта совпадёт с ожидаемым
+    eq_("<class 'sqlite3.Cursor'>", a)
+
+
+
+# проверка функции регистрации/входа пользователя
+def test_login():
+    # создаём блок вводных данных (имя, пароль, дата регистр)
+    username = 'FU'; password = 'fp'; date = '12-10-2021'
+    # данные нужны для проверки автоматического создания таблицы
     # создаём активное подключение к БД
-    cn = fn.connect_db(app.config['DATABASE'])
-        
+    #cn = fn.connect_db(app.config['DATABASE'])
+    #cur = cn.cursor()
+    #cur.execute("insert into test_users ('username, pswrd, reg_date')")
+    pass

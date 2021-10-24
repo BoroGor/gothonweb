@@ -21,7 +21,7 @@ def create_db(db_adres):
     # вызовем команду создания таблицы и необходимых столбцов
     db.cursor().executescript("""
         create table if not exists test_users (
-        id integer primary key autoincrement,
+        id integer not null primary key autoincrement,
         username text not null,
         pswrd text not null,
         min_trying integer,

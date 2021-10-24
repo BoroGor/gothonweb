@@ -19,6 +19,8 @@ def index():
     session["room_name"] = planisphere.START  # "central_corridor"
     # для оружейной
     session["try"] = 0
+    # создаём защищённое хранилище для имени пользователя
+    session['cur_usr'] = str('')
     # перенаправляем на указанный адрес
     return redirect(url_for("login"))
 
@@ -27,7 +29,24 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 # создаём обрабатывающую функцию
 def login():
-    return render_template("login.html")
+    # если запрос на получение страницы, не отправку данных
+    if request.method == "GET":
+        # если пользователь уже определён
+        if session['cur_usr'] != '':
+            # то переходим на страницу игры
+            return redirect(url_for("game"))
+        # если же пользователь не определён
+        else:
+            # открываем форму входа в профиль
+            return render_template("login.html")
+    # если была отправлена форма
+    if request.method == "POST":
+        # чтение имени пользователя и пароля из формы
+        # вызов функции БД для регистрации/выхода
+        # при успешном входе в профиль запись в session['cur_usr']
+        # если не удалось войти (имя занято или пароль не подошёл)
+        # возврат формы        
+        pass
 
 
 # для страницы /game, задаём используемые методы
