@@ -1,7 +1,6 @@
 from nose.tools import *
 import db_func as fn
 from pathlib import Path
-import sqlite3
 from app import app
 
 
@@ -50,13 +49,30 @@ def test_create_db():
     # закроем соединение
     cur.connection.close()
 
+# проверка функции нахождения пользователя
+def test_check_db():
+    # создаём активное подключение к БД
+    con = fn.connect_db(app.config['DATABASE'])
+    # создаём курсор
+    cur = con.cursor()
+    # задаём имя искомого пользователя
+    user = 'u'
+    # пытаемся найти пользователя в пустой таблице
+    eq_(fn.check(user, con), False)
+    # создаём пользователя
+    # сохраняем данные
+    # пытаемся найти пользователя
+    # чистим таблицу
+    # закрываем подключение
+    con.close()
 # проверка функции регистрации/входа пользователя
 def test_login():
     # создаём блок вводных данных (имя, пароль, дата регистр)
-    username = 'FU'; password = 'fp'; date = '12-10-2021'
-    # данные нужны для проверки автоматического создания таблицы
+    username = 'FU'; date = '2021-10-25'
     # создаём активное подключение к БД
-    #cn = fn.connect_db(app.config['DATABASE'])
-    #cur = cn.cursor()
+    cn = fn.connect_db(app.config['DATABASE'])
+    # создаём объект курсора для SQL-вызовов
+    cur = cn.cursor()
     #cur.execute("insert into test_users ('username, pswrd, reg_date')")
-    pass
+    # закрываем подключение
+    cn.close()

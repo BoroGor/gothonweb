@@ -23,7 +23,6 @@ def create_db(db_adres):
         create table if not exists test_users (
         id integer not null primary key autoincrement,
         username text not null,
-        pswrd text not null,
         min_trying integer,
         reg_date text not null);""")
     # сохраняем изменения в таблице

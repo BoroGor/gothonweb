@@ -16,7 +16,7 @@
     <!--конец цикла вывода флеш-сообщений-->
     {% endwith %}
 <style media="screen">
-  #user_input, #pas_input {
+  #user_input {
     border: none;
     outline: none;
     border-radius: 5px;
@@ -54,10 +54,6 @@
     <form action="/login" method="post">
     <input type="text" name="username" autocomplete="off" required="required"
     placeholder="Nickname" id='user_input'>
-    <p>
-    <input type="password" name="pswrd" autocomplete="off" required="required"
-    placeholder="Password" id='pas_input'>
-    </p>
     <button type="submit"></button>
     </form>
 </div>

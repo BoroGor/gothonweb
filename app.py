@@ -1,7 +1,7 @@
-from flask import Flask, session, redirect, url_for, request, render_template
+from flask import Flask, session, redirect, url_for, request, render_template, flash
 from gothonweb import planisphere
 from gothonweb.helpblock import help
-#import sqlite3
+from datetime import date
 
 
 # создаём объект класса Flask и присваиваем имя приложению - не переменной!
@@ -19,8 +19,11 @@ def index():
     session["room_name"] = planisphere.START  # "central_corridor"
     # для оружейной
     session["try"] = 0
-    # создаём защищённое хранилище для имени пользователя
-    session['cur_usr'] = str('')
+    # костыль, почему-то без него автоматически создаётся куки
+    # сработает лишь при инициализации
+    if 'cur_usr' in session:
+        # удаляем куки пользователя
+        session.pop('cur_usr', None)
     # перенаправляем на указанный адрес
     return redirect(url_for("login"))
 
@@ -31,22 +34,20 @@ def index():
 def login():
     # если запрос на получение страницы, не отправку данных
     if request.method == "GET":
-        # если пользователь уже определён
-        if session['cur_usr'] != '':
-            # то переходим на страницу игры
-            return redirect(url_for("game"))
-        # если же пользователь не определён
-        else:
-            # открываем форму входа в профиль
-            return render_template("login.html")
+        # открываем форму входа в профиль
+        return render_template("login.html")
     # если была отправлена форма
     if request.method == "POST":
-        # чтение имени пользователя и пароля из формы
-        # вызов функции БД для регистрации/выхода
-        # при успешном входе в профиль запись в session['cur_usr']
-        # если не удалось войти (имя занято или пароль не подошёл)
-        # возврат формы        
-        pass
+        # запишем день, месяц и год дня регистрации
+        d, m, y = date.today().day, date.today().month, date.today().year
+        # запишем дату в формате "ГГГГ-ММ-ДД"
+        today = '-'.join([str(y), str(m), str(d)])
+        # считываем имя из формы
+        user = request.form.get("username")
+        # высвечиваем информацию об имени пользователя на следующей странице
+        flash(f"^-^ Logged in as {user} ^-^", 'info')
+        # перенаправляем на страницу игры
+        return redirect(url_for("game"))
 
 
 # для страницы /game, задаём используемые методы
