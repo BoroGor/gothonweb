@@ -67,7 +67,7 @@ def test_action_form():
     # переход в оружейную и проверка смерти после трёх
     with app.test_request_context('/game'):
         # было сделано до запроса 2 попытки
-        session['try']=2
+        session['try']=3
         # комната - оружейная
         session['romm_name']="laser_weapon_armory"
         # данные, приводящие к проигрышу

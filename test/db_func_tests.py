@@ -47,8 +47,8 @@ def test_create_db():
     a = str(type(cur.execute('select * from test_users')))
     # если нет ошибки, то тип объекта совпадёт с ожидаемым
     eq_("<class 'sqlite3.Cursor'>", a)
-
-
+    # закроем соединение
+    cur.connection.close()
 
 # проверка функции регистрации/входа пользователя
 def test_login():
