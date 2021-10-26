@@ -31,15 +31,15 @@ def create_db(db_adres):
     db.close()
 
 # функция поиска пользователя в БД
-def check(user, con):
-    """user - имя искомого пользователя, con - подключение к БД;
+def check(user, cur):
+    """user - имя искомого пользователя, cur - курсор БД;
     возвращает True, если пользователь найден, иначе - False"""
     # переводим имена в тип строки
     user = str(user)
     # запрос на посик пользователя
-    con.cursor().execute('select * from users where username = ?', user)
+    cur.execute('select * from users where username = ?', user)
     # сохраним вывод
-    ans = con.cursor().fetchall()
+    ans = cur.fetchall()
     # если в ответе нет строк
     if len(ans) == 0:
         # пользователь не найден

@@ -55,16 +55,25 @@ def test_check_db():
     con = fn.connect_db(app.config['DATABASE'])
     # создаём курсор
     cur = con.cursor()
-    # задаём имя искомого пользователя
-    user = 'u'
+    # задаём имя искомого пользователя, дату рег-ии
+    user = 'u'; rd = ''
     # пытаемся найти пользователя в пустой таблице
-    eq_(fn.check(user, con), False)
+    eq_(fn.check(user, cur), False)
     # создаём пользователя
-    # сохраняем данные
+    cur.execute('insert into users (username, reg_date) values (?,?)', [user, rd])
+    cur.execute('select * from users where username = ?', user)
+    print(cur.fetchall())
+    # сохраняем изменения
+    con.commit()
     # пытаемся найти пользователя
+    eq_(fn.check(user, cur), True)
     # чистим таблицу
+    cur.execute('delete from users')
+    # сохраняем изменения
+    con.commit()
     # закрываем подключение
     con.close()
+
 # проверка функции регистрации/входа пользователя
 def test_login():
     # создаём блок вводных данных (имя, пароль, дата регистр)
