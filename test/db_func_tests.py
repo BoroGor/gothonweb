@@ -61,8 +61,6 @@ def test_check_db():
     eq_(fn.check(user, cur), False)
     # создаём пользователя
     cur.execute('insert into users (username, reg_date) values (?,?)', [user, rd])
-    cur.execute('select * from users where username = ?', user)
-    print(cur.fetchall())
     # сохраняем изменения
     con.commit()
     # пытаемся найти пользователя
@@ -76,12 +74,28 @@ def test_check_db():
 
 # проверка функции регистрации/входа пользователя
 def test_login():
-    # создаём блок вводных данных (имя, пароль, дата регистр)
-    username = 'FU'; date = '2021-10-25'
+    # создаём блок вводных данных (имя, дата регистр)
+    user = 'FU'; d = '2021-10-25'
     # создаём активное подключение к БД
     cn = fn.connect_db(app.config['DATABASE'])
     # создаём объект курсора для SQL-вызовов
     cur = cn.cursor()
-    #cur.execute("insert into test_users ('username, pswrd, reg_date')")
+    # логиним пользователя
+    fn.login(user, d, cur)
+    # проверим, создался ли пользователь
+    eq_(fn.check(user, cur), True)
+    # проверим дату регистрации пользователя
+    cur.execute('select reg_date from users where username=?', user)
+    # запомним ответ на запрос
+    f = cur.fetchall()
+    # проверим, что выведена одна запись
+    eq_(len(f), 1)
+    # прочитаем дату
+    ch_d = f[0][0]
+    # проверим, что дата определена верно
+    eq_(ch_d, d)
+    # чистим таблицу
+    cur.execute('delete from users')
+    con.commit()
     # закрываем подключение
     cn.close()
