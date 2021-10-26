@@ -43,7 +43,7 @@ def test_create_db():
     # создадим объект курсора, для вызова SQL-запросов
     cur = fn.connect_db(app.config['DATABASE']).cursor()
     # вернём тип объекта запроса, преобразуем в строку
-    a = str(type(cur.execute('select * from test_users')))
+    a = str(type(cur.execute('select * from users')))
     # если нет ошибки, то тип объекта совпадёт с ожидаемым
     eq_("<class 'sqlite3.Cursor'>", a)
     # закроем соединение

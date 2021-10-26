@@ -20,7 +20,7 @@ def create_db(db_adres):
     db = connect_db(db_adres)
     # вызовем команду создания таблицы и необходимых столбцов
     db.cursor().executescript("""
-        create table if not exists test_users (
+        create table if not exists users (
         id integer not null primary key autoincrement,
         username text not null,
         min_trying integer,
@@ -29,3 +29,22 @@ def create_db(db_adres):
     db.commit()
     # закрываем соединение
     db.close()
+
+# функция поиска пользователя в БД
+def check(user, con):
+    """user - имя искомого пользователя, con - подключение к БД;
+    возвращает True, если пользователь найден, иначе - False"""
+    # переводим имена в тип строки
+    user = str(user)
+    # запрос на посик пользователя
+    con.cursor().execute('select * from users where username = ?', user)
+    # сохраним вывод
+    ans = con.cursor().fetchall()
+    # если в ответе нет строк
+    if len(ans) == 0:
+        # пользователь не найден
+        return False
+    # если же ответ содержит строку/строки
+    else:
+        # пользователь найден
+        return True
