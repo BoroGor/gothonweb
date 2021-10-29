@@ -92,9 +92,13 @@ def test_create_user():
     # создаём объект курсора для SQL-вызовов
     cur = con.cursor()
     # создаём запись пользователя
-    fn.create_user(user, d, cur)
+    fn.create_user(user, d, app.config['DATABASE'])
     # проверим, создался ли пользователь
     eq_(fn.check(user, cur), True)
+    # попытаемся создать ещё одного такого же пользователя
+    ans = fn.create_user(user, d, app.config['DATABASE'])
+    # проверим, что попытка не удалась
+    eq_(ans, 'already exists')
     # проверим дату регистрации пользователя
     cur.execute('select reg_date from users where username=?', (user,))
     # запомним ответ на запрос

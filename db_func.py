@@ -50,10 +50,12 @@ def check(user, cur):
         return True
 
 # функция создания записи пользователя
-def create_user(user, date, cur):
+def create_user(user, date, db_adres):
     """user - имя пользователя, date - дата регистрации, cur - курсор БД;
     создаёт запись в БД
     """
+    # создадим курсор
+    cur = connect_db(db_adres).cursor()
     # явно объявим типы данных
     user = str(user); date = str(date); data = (user, date,)
     # если пользователь уже существует

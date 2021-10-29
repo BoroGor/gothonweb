@@ -2,6 +2,8 @@ from flask import Flask, session, redirect, url_for, request, render_template, f
 from gothonweb import planisphere
 from gothonweb.helpblock import help
 from datetime import date
+from pathlib import Path
+import db_func as fn
 
 
 # создаём объект класса Flask и присваиваем имя приложению - не переменной!
@@ -9,11 +11,18 @@ app = Flask(__name__)
 # включаем режим отладки
 app.debug = True
 
+# задаём адрес для создания тестовой БД
+DATABASE_abs = Path(app.root_path, 'static', 'main.db')
+# добавим в конфигурацию приложения адрес БД
+app.config.update(dict(DATABASE = DATABASE_abs))
+
 
 # для начальной страницы
 @app.route("/")
 # создаём обрабатывающую функцию
 def index():
+    # создаём БД
+    fn.create_db(app.config['DATABASE'])
     # создаём сессию с начальными данными - начальной комнатой
     # создаём пару КЛЮЧ - ЗНАЧЕНИЕ
     session["room_name"] = planisphere.START  # "central_corridor"
@@ -44,8 +53,12 @@ def login():
         today = '-'.join([str(y), str(m), str(d)])
         # считываем имя из формы
         user = request.form.get("username")
+        # запишем пользователя в сессию
+        session['cur_usr'] = str(user)
         # высвечиваем информацию об имени пользователя на следующей странице
-        flash(f"^-^ Logged in as {user} ^-^", 'info')
+        flash(f"^-^ Logged in as {session['cur_usr']} ^-^", 'info')
+        # сделаем запись об игроке в БД
+        fn.create_user(session['cur_usr'], today, app.config['DATABASE'])
         # перенаправляем на страницу игры
         return redirect(url_for("game"))
 
