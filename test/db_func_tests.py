@@ -9,6 +9,17 @@ DATABASE_abs = Path(app.root_path, 'static', 'test.db')
 # добавим в конфигурацию приложения адрес БД
 app.config.update(dict(DATABASE = DATABASE_abs))
 
+# функция гарантированной очистки тестовой БД
+def teardown_func():
+    # создаём подключение к БД
+    c = fn.connect_db(app.config['DATABASE'])
+    # удаляем ВСЕ записи
+    c.cursor().execute('delete from users')
+    # сохроняем изменения
+    c.commit()
+    # закрываем соединение
+    c.close()
+
 # проверяем функцию подключения к БД
 def test_connect_db():
     # функция возвращает объект класса "connect", адрес
@@ -73,19 +84,19 @@ def test_check_db():
     con.close()
 
 # проверка функции регистрации/входа пользователя
-def test_login():
+def test_create_user():
     # создаём блок вводных данных (имя, дата регистр)
     user = 'FU'; d = '2021-10-25'
     # создаём активное подключение к БД
-    cn = fn.connect_db(app.config['DATABASE'])
+    con = fn.connect_db(app.config['DATABASE'])
     # создаём объект курсора для SQL-вызовов
-    cur = cn.cursor()
-    # логиним пользователя
-    fn.login(user, d, cur)
+    cur = con.cursor()
+    # создаём запись пользователя
+    fn.create_user(user, d, cur)
     # проверим, создался ли пользователь
     eq_(fn.check(user, cur), True)
     # проверим дату регистрации пользователя
-    cur.execute('select reg_date from users where username=?', user)
+    cur.execute('select reg_date from users where username=?', (user,))
     # запомним ответ на запрос
     f = cur.fetchall()
     # проверим, что выведена одна запись
@@ -98,4 +109,4 @@ def test_login():
     cur.execute('delete from users')
     con.commit()
     # закрываем подключение
-    cn.close()
+    con.close()

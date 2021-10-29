@@ -35,7 +35,7 @@ def check(user, cur):
     """user - имя искомого пользователя, cur - курсор БД;
     возвращает True, если пользователь найден, иначе - False"""
     # переводим имена в тип строки
-    user = str(user)
+    user = (str(user),)
     # запрос на посик пользователя
     cur.execute('select * from users where username = ?', user)
     # сохраним вывод
@@ -48,3 +48,20 @@ def check(user, cur):
     else:
         # пользователь найден
         return True
+
+# функция создания записи пользователя
+def create_user(user, date, cur):
+    """user - имя пользователя, date - дата регистрации, cur - курсор БД;
+    создаёт запись в БД
+    """
+    # явно объявим типы данных
+    user = str(user); date = str(date); data = (user, date,)
+    # если пользователь уже существует
+    if check(user, cur):
+        # ничего не предпринимаем
+        return('already exists')
+    # если же пользователь отсутствует в БД
+    else:
+        # запишем данные в таблицу
+        cur.execute('insert into users (username, reg_date) values (?,?)', data)
+        cur.connection.commit()
