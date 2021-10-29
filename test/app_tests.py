@@ -1,13 +1,13 @@
 from nose.tools import *
 from app import app
 from flask import session
-import sqlite3
 
 
 # настройка конфигурации приложения для тестирования, чтобы ошибки
 # обрабатывались клиентом тестирования, а не самим приложением
 app.testing = True
 client = app.test_client()
+
 
 
 # функция определения заголовка страницы
@@ -66,7 +66,7 @@ def test_action_form():
 
     # переход в оружейную и проверка смерти после трёх
     with app.test_request_context('/game'):
-        # было сделано до запроса 2 попытки
+        # было сделано до запроса 3 попытки
         session['try']=3
         # комната - оружейная
         session['romm_name']="laser_weapon_armory"
@@ -79,12 +79,17 @@ def test_action_form():
         eq_(name_head(response), 'death')
 
 # проверка регистрации/входа, [/login]
-#def test_login():
-    # переход со стартовой страницы на страницу выхода
-
-    # проверка регистрации нового пользователя
-    # проверка создания профиля с уже существующим именем
-
-    # проверка входа в созданный профиль
-
-    # проверка возможности удаления профиля
+def test_login():
+    # проверка получения нужной страницы
+    res = client.get('/login', follow_redirects = True)
+    eq_(name_head(res), 'Create Your Unique Nickname')
+    # проверка запоминания пользователя в сессии
+    # проверка флеш-уведомления при логине
+    #with app.test_request_context('/login'):
+        # дата для ввода в форму
+        #data = {'username': 'login user'}
+        #res = client.post('/login', follow_redirects = True, data = data)
+        #assert_in('login user', res.data.decode())
+    # проверка создания записи пользователя
+    # почему-то пишет в main, надо писать в test
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
