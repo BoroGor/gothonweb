@@ -9,17 +9,6 @@ DATABASE_abs = Path(app.root_path, 'static', 'test.db')
 # добавим в конфигурацию приложения адрес БД
 app.config.update(dict(DATABASE = DATABASE_abs))
 
-# функция гарантированной очистки тестовой БД
-def teardown_func():
-    # создаём подключение к БД
-    c = fn.connect_db(app.config['DATABASE'])
-    # удаляем ВСЕ записи
-    c.cursor().execute('delete from users')
-    # сохроняем изменения
-    c.commit()
-    # закрываем соединение
-    c.close()
-
 # проверяем функцию подключения к БД
 def test_connect_db():
     # функция возвращает объект класса "connect", адрес
@@ -132,5 +121,7 @@ def test_wtry():
     # ожидаемый ответ ('user', 2)
     eq_(ans2, (user, 2))
     # почистим БД
-    fn.connect_db(app.config['DATABASE']).cursor().execute('delete from users')
-    fn.connect_db(app.config['DATABASE']).commit()
+    con = fn.connect_db(app.config['DATABASE'])
+    con.cursor().execute('delete from users')
+    con.commit()
+    con.close()

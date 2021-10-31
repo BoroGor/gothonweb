@@ -90,3 +90,5 @@ def test_login():
         res = client.post('/login', follow_redirects = True, data = data)
         # проверка флеш-уведомления при логине
         assert_in('login user', res.data.decode())
+
+# проверка обновления числа попыток
