@@ -120,6 +120,9 @@ def test_wtry():
     ans2 = fn.wtry(user, ntry2, app.config['DATABASE'])
     # ожидаемый ответ ('user', 2)
     eq_(ans2, (user, 2))
+    # попытаемся обновить попытки несуществующего игрока
+    ans3 = fn.wtry('kjdf', ntry2, app.config['DATABASE'])
+    eq_(ans3, 'kjdf not exists')
     # почистим БД
     con = fn.connect_db(app.config['DATABASE'])
     con.cursor().execute('delete from users')
