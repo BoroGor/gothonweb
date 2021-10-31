@@ -23,7 +23,7 @@ def create_db(db_adres):
         create table if not exists users (
         id integer not null primary key autoincrement,
         username text not null,
-        min_trying integer,
+        min_trying integer default 3,
         reg_date text not null);""")
     # сохраняем изменения в таблице
     db.commit()
@@ -68,3 +68,38 @@ def create_user(user, date, db_adres):
         # запишем данные в таблицу
         cur.execute('insert into users (username, reg_date) values (?,?)', data)
         cur.connection.commit()
+
+# функция записи меньшего значения попыток
+def wtry(user, new_try, db_adres):
+    """user - имя пользователя, new_try - новое число попыток, db_adres - адрес
+    БД; возвращает кортеж (имя пользователя, минимальное число попыток)
+    """
+    new_try = int(new_try)
+    # подключаемся к БД
+    con = connect_db(db_adres)
+    cur = con.cursor()
+    # если пользователь существует
+    if check(user, cur):
+        # получим текущее значение попыток
+        t = (user,)
+        cur.execute('select min_trying from users where username=?', t)
+        cur_try = cur.fetchall()[0][0]
+        # если новое число попыток меньше
+        if new_try < cur_try:
+            d = {'val': new_try, 'u': user}
+            # записываем нвоое значение
+            cur.execute('update users set min_trying=:val where username=:u',d)
+            # сохраняем изменения
+            con.commit()
+        # вернём пару пользователь-попытки
+        cur.execute('select username, min_trying from users where username=?', t)
+        ans = cur.fetchall()[0]
+        # закроем подключение
+        con.close()
+        return ans
+    # если же пользователя не существует
+    else:
+        # закроем подключение
+        con.close()
+        # вернём сообщение о том, что пользователя нет в БД
+        return f'{user} not exists'

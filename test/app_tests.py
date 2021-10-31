@@ -83,13 +83,10 @@ def test_login():
     # проверка получения нужной страницы
     res = client.get('/login', follow_redirects = True)
     eq_(name_head(res), 'Create Your Unique Nickname')
-    # проверка запоминания пользователя в сессии
-    # проверка флеш-уведомления при логине
-    #with app.test_request_context('/login'):
+    # проверка работы формы логина
+    with app.test_request_context('/login'):
         # дата для ввода в форму
-        #data = {'username': 'login user'}
-        #res = client.post('/login', follow_redirects = True, data = data)
-        #assert_in('login user', res.data.decode())
-    # проверка создания записи пользователя
-    # почему-то пишет в main, надо писать в test
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        data = {'username': 'login user'}
+        res = client.post('/login', follow_redirects = True, data = data)
+        # проверка флеш-уведомления при логине
+        assert_in('login user', res.data.decode())

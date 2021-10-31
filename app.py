@@ -57,8 +57,13 @@ def login():
         session['cur_usr'] = str(user)
         # высвечиваем информацию об имени пользователя на следующей странице
         flash(f"^-^ Logged in as {session['cur_usr']} ^-^", 'info')
-        # сделаем запись об игроке в БД
-        fn.create_user(session['cur_usr'], today, app.config['DATABASE'])
+        # предотвращаем запись в основную БД во время тестов
+        #
+        # КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ КОСТЫЛЬ
+        #
+        if not app.testing:
+            # сделаем запись об игроке в БД
+            fn.create_user(session['cur_usr'], today, app.config['DATABASE'])
         # перенаправляем на страницу игры
         return redirect(url_for("game"))
 

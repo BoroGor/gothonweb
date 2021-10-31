@@ -114,3 +114,23 @@ def test_create_user():
     con.commit()
     # закрываем подключение
     con.close()
+
+# проверка функции записи минимального числа попыток
+def test_wtry():
+    # входные данные
+    ntry = 3; user = 'user'; rd = 'rd'
+    # создадим запись об игроке
+    fn.create_user(user, rd, app.config['DATABASE'])
+    # на вход - игрок, попытки, адрес БД
+    # записывает новое значение попыток в профиль, если их число меньше
+    ans = fn.wtry(user, ntry, app.config['DATABASE'])
+    # ожидаемый ответ ('user', 3)
+    eq_(ans, (user, 3))
+    # изменим входные данные
+    ntry2 = 2
+    ans2 = fn.wtry(user, ntry2, app.config['DATABASE'])
+    # ожидаемый ответ ('user', 2)
+    eq_(ans2, (user, 2))
+    # почистим БД
+    fn.connect_db(app.config['DATABASE']).cursor().execute('delete from users')
+    fn.connect_db(app.config['DATABASE']).commit()
